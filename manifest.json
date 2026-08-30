@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AutoLike",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Automatically like YouTube videos based on customizable watch duration and threshold settings.",
   "permissions": ["storage"],
   "action": {

@@ -35,7 +35,15 @@
     if (moviePlayer && (moviePlayer.classList.contains('ad-showing') || moviePlayer.classList.contains('ad-interrupting'))) {
       return true;
     }
-    return Boolean(document.querySelector('.ytp-ad-player-overlay, .ytp-ad-text, .video-ads.ytp-ad-module > *'));
+    const skipButton = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button');
+    if (skipButton && skipButton.offsetParent !== null) {
+      return true;
+    }
+    const adOverlay = document.querySelector('.ytp-ad-player-overlay, .ytp-ad-player-overlay-layout');
+    if (adOverlay && adOverlay.offsetParent !== null) {
+      return true;
+    }
+    return false;
   }
 
   function getButton(type) {
@@ -160,7 +168,6 @@
     const watchThreshold = (settings.watchPercent ?? DEFAULT_WATCH_PERCENT) / 100;
 
     if (video.duration < minDurationSec) {
-      stop();
       return;
     }
 
