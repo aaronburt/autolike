@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AutoLike",
   "version": "1.0.0",
-  "description": "Automatically like YouTube videos after watching 15% of their runtime (videos over 5 minutes only).",
+  "description": "Automatically like YouTube videos based on customizable watch duration and threshold settings.",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
