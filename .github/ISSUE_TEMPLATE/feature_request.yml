@@ -1,0 +1,19 @@
+name: 💡 Feature Request
+description: Suggest an idea or enhancement for AutoLike
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Feature Description
+      placeholder: A clear description of the feature or improvement you would like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Problem / Motivation
+      placeholder: Why is this feature needed and what problem does it solve?
+    validations:
+      required: true

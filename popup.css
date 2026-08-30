@@ -9,7 +9,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: #0f0f0f;
   color: #e1e1e1;
-  width: 320px;
+  width: 340px;
 }
 
 .container {
@@ -25,14 +25,22 @@ body {
 
 .header {
   justify-content: space-between;
+  gap: 12px;
 }
 
 .brand {
   gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.brand-text {
+  min-width: 0;
 }
 
 .header-actions {
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -63,11 +71,7 @@ body {
   font-size: 16px;
   font-weight: 700;
   color: #fff;
-}
-
-.tagline {
-  font-size: 11px;
-  color: #717171;
+  line-height: 1.2;
 }
 
 .toggle {
@@ -245,6 +249,27 @@ body {
 .setting-unit {
   font-size: 12px;
   color: #555;
+}
+
+.footer-link-row {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #222;
+  justify-content: center;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #717171;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #aaa;
 }
 
 .activity-list, .history-list {

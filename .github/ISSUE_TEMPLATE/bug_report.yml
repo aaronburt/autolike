@@ -1,0 +1,44 @@
+name: 🐛 Bug Report
+description: Report a bug or issue with AutoLike
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue!
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & Version
+      placeholder: "e.g., Chrome 128.0 (Windows 11)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Bug
+      placeholder: A clear and concise description of what went wrong.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. Open a YouTube video '...'
+        2. Set threshold to '...'
+        3. Watch video '...'
+        4. See issue
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: What you expected to happen instead.
+    validations:
+      required: true

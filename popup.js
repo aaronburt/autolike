@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const minDurationInput = document.getElementById('min-duration');
   const watchPercentInput = document.getElementById('watch-percent');
   const recordHistoryToggle = document.getElementById('record-history-toggle');
-  const tagline = document.getElementById('tagline');
   const clearHistoryBtn = document.getElementById('clear-history');
   const openTabBtn = document.getElementById('open-tab-btn');
   const historyOpenTab = document.getElementById('history-open-tab');
@@ -51,10 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
       hour: '2-digit',
       minute: '2-digit'
     });
-  }
-
-  function updateTagline(percent, minDur) {
-    tagline.textContent = `Auto-like after ${percent}% watched (>${minDur}m)`;
   }
 
   function getFilteredHistory() {
@@ -173,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
     minDurationInput.value = minDur;
     watchPercentInput.value = percent;
     recordHistoryToggle.checked = res.recordHistory !== false;
-    updateTagline(percent, minDur);
     renderActivity(allLikedVideos);
     renderHistory(getFilteredHistory());
   }
@@ -205,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const val = Math.max(0, Math.min(120, parseInt(minDurationInput.value, 10) || 0));
     minDurationInput.value = val;
     await chrome.storage.local.set({ minDuration: val });
-    updateTagline(parseInt(watchPercentInput.value, 10), val);
   });
 
   watchPercentInput.addEventListener('change', async () => {
@@ -213,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const val = Math.max(1, Math.min(100, parseInt(watchPercentInput.value, 10) || 25));
     watchPercentInput.value = val;
     await chrome.storage.local.set({ watchPercent: val });
-    updateTagline(val, parseInt(minDurationInput.value, 10));
   });
 
   recordHistoryToggle.addEventListener('change', async () => {

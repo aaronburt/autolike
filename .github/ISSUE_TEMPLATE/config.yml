@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security Vulnerability
+    url: mailto:contact@aaronburt.co.uk
+    about: Please report security vulnerabilities directly via email.
