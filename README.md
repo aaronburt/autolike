@@ -22,7 +22,15 @@ AutoLike respects user choices:
 
 ## Installation
 
-1. Clone or download this repository.
+### From Release
+1. Download the latest `autolike-extension-v*.zip` from the [GitHub Releases](https://github.com/aaronburt/AutoLike/releases/latest) page.
+2. Unzip the downloaded archive.
+3. Open Google Chrome and navigate to `chrome://extensions/`.
+4. Enable **Developer mode** using the toggle in the top right corner.
+5. Click **Load unpacked** and select the extracted folder.
+
+### From Source
+1. Clone this repository: `git clone https://github.com/aaronburt/AutoLike.git`
 2. Open Google Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer mode** using the toggle in the top right corner.
 4. Click **Load unpacked** and select this project's folder (`AutoLike`).
