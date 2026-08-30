@@ -1,0 +1,501 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f0f0f;
+  color: #e1e1e1;
+  width: 320px;
+}
+
+.container {
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header, .brand, .header-actions, .stats, .setting-row, .setting-input, .now-watching-empty, .now-watching-liked, .now-watching-skipped, .history-header, .activity-list li, .history-list li {
+  display: flex;
+  align-items: center;
+}
+
+.header {
+  justify-content: space-between;
+}
+
+.brand {
+  gap: 10px;
+}
+
+.header-actions {
+  gap: 8px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.icon-btn:hover {
+  color: #fff;
+  background: #1a1a1a;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.brand-text h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tagline {
+  font-size: 11px;
+  color: #717171;
+}
+
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #3a3a3a;
+  border-radius: 24px;
+  transition: background 0.3s;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #717171;
+  border-radius: 50%;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: #cc0000;
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+.divider {
+  height: 1px;
+  background: #2a2a2a;
+  margin: 14px 0;
+}
+
+.stats {
+  gap: 8px;
+  padding: 8px 12px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.stats-icon {
+  width: 16px;
+  height: 16px;
+  color: #ff4444;
+}
+
+.now-watching h2, .settings h2, .activity h2 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #717171;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.now-watching-card {
+  padding: 10px 12px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+}
+
+.now-watching-empty {
+  gap: 8px;
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+}
+
+.now-watching-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 8px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 6px;
+  background: #2a2a2a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #cc0000, #ff4444);
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.progress-text {
+  color: #aaa;
+}
+
+.progress-time {
+  color: #555;
+}
+
+.now-watching-liked, .now-watching-skipped {
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.now-watching-liked {
+  color: #ff4444;
+}
+
+.now-watching-skipped {
+  color: #888;
+}
+
+.now-watching-liked span, .now-watching-skipped span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.setting-row {
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.setting-input {
+  gap: 4px;
+}
+
+.setting-input input {
+  width: 52px;
+  padding: 4px 6px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  color: #e1e1e1;
+  font-size: 13px;
+  text-align: center;
+  outline: none;
+}
+
+.setting-unit {
+  font-size: 12px;
+  color: #555;
+}
+
+.activity-list, .history-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.activity-list li, .history-list li {
+  font-size: 12px;
+  color: #aaa;
+  padding: 8px 10px;
+  background: #1a1a1a;
+  border-radius: 6px;
+  border: 1px solid #222;
+  gap: 8px;
+}
+
+.activity-list li .dot, .history-list li .dot {
+  width: 6px;
+  height: 6px;
+  background: #ff4444;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.activity-list li .title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-list li .time {
+  font-size: 10px;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  color: #555 !important;
+  background: transparent !important;
+  border: 1px dashed #2a2a2a !important;
+  justify-content: center;
+  font-style: italic;
+}
+
+.view-all-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  background: #1a1a1a;
+  color: #aaa;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.view-all-btn:hover, .clear-history-btn:hover {
+  background: #252525;
+}
+
+.history-panel {
+  position: absolute;
+  inset: 0;
+  background: #0f0f0f;
+  z-index: 20;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease, visibility 0.25s;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.history-panel.open {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.history-header {
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.history-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.history-back {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.clear-history-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1px solid #2a2a2a;
+  color: #717171;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.history-search-container {
+  position: relative;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 8px;
+  color: #666;
+  pointer-events: none;
+}
+
+.history-search {
+  width: 100%;
+  padding: 6px 8px 6px 28px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #e1e1e1;
+  font-size: 12px;
+  outline: none;
+}
+
+.history-search:focus {
+  border-color: #cc0000;
+}
+
+.history-list {
+  flex: 1;
+  max-height: 300px;
+}
+
+.history-list li .info {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-list li .info .title {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #ccc;
+}
+
+.history-list li .info .title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.history-list li .info .meta {
+  font-size: 10px;
+  color: #555;
+  margin-top: 2px;
+}
+
+.delete-item-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.delete-item-btn:hover {
+  color: #ff4444;
+}
+
+.status-disabled .stats, .status-disabled .activity, .status-disabled .now-watching {
+  opacity: 0.4;
+}
+
+@media (min-width: 600px) {
+  body {
+    width: 100%;
+    min-height: 100vh;
+    background: #0a0a0a;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 40px 24px;
+    padding: 32px;
+    background: #111111;
+    border: 1px solid #222222;
+    border-radius: 16px;
+  }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 36px;
+    align-items: start;
+  }
+
+  .dashboard-right {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .activity {
+    display: none;
+  }
+
+  .history-panel {
+    position: static;
+    transform: none;
+    padding: 0;
+    background: transparent;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+  }
+
+  .history-back, #open-tab-btn, .full-tab-only-hide {
+    display: none !important;
+  }
+
+  .history-list {
+    max-height: 520px;
+  }
+}
