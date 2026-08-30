@@ -19,3 +19,6 @@ AutoLike respects user choices:
 - Full-page dashboard view in a new tab with two-column layout
 - Real-time search filter and individual item deletion for liked video history
 - Simple master toggle to enable or disable functionality
+
+## Notice
+This project was built with the assistance of Google Gemini and thoroughly reviewed and verified by a human.
