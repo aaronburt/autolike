@@ -14,6 +14,8 @@ AutoLike respects user choices:
 - Automatically likes YouTube videos after watching a set percentage
 - Respects user dislikes and manual likes
 - Dynamic dislike recovery if a dislike is undone
+- Ad-resilient tracking (pauses during pre-roll and mid-roll ads without killing watcher)
+- Scaled watch accumulation supporting variable playback speeds (e.g. 1.25x, 1.5x, 2x)
 - Customizable minimum video duration and watch threshold
 - Live watching progress indicator and like history drawer in popup UI
 - Full-page dashboard view in a new tab with two-column layout

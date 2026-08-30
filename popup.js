@@ -31,6 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let pollTimer = null;
   let searchQuery = '';
 
+  function isContextValid() {
+    return Boolean(typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id);
+  }
+
   function timeAgo(timestamp) {
     const diff = Math.floor((Date.now() - timestamp) / 1000);
     if (diff < 60) return 'just now';
@@ -93,21 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     list.slice(0, 5).forEach((video) => {
       const li = document.createElement('li');
-      li.innerHTML = `<span class="dot"></span><span class="title"></span><span class="time">${timeAgo(video.timestamp)}</span>`;
+      li.innerHTML = '<span class="dot"></span><span class="title"></span><span class="time"></span>';
       li.querySelector('.title').textContent = video.title;
+      li.querySelector('.time').textContent = timeAgo(video.timestamp);
       activityList.appendChild(li);
     });
     viewAllBtn.style.display = 'block';
   }
 
-  function deleteHistoryItem(videoId, timestamp) {
+  async function deleteHistoryItem(videoId, timestamp) {
+    if (!isContextValid()) return;
     allLikedVideos = allLikedVideos.filter((v) => !(v.videoId === videoId && v.timestamp === timestamp));
-    chrome.storage.local.set({ likedVideos: allLikedVideos }, () => {
-      const count = allLikedVideos.length;
-      statsCount.textContent = `${count} video${count !== 1 ? 's' : ''} auto-liked`;
-      renderActivity(allLikedVideos);
-      renderHistory(getFilteredHistory());
-    });
+    await chrome.storage.local.set({ likedVideos: allLikedVideos });
+    const count = allLikedVideos.length;
+    statsCount.textContent = `${count} video${count !== 1 ? 's' : ''} auto-liked`;
+    renderActivity(allLikedVideos);
+    renderHistory(getFilteredHistory());
   }
 
   function renderHistory(list) {
@@ -152,28 +157,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function loadState() {
-    chrome.storage.local.get(['enabled', 'likedVideos', 'minDuration', 'watchPercent', 'recordHistory'], (res) => {
-      const enabled = res.enabled !== false;
-      toggleSwitch.checked = enabled;
-      container.classList.toggle('status-disabled', !enabled);
+  async function loadState() {
+    if (!isContextValid()) return;
+    const res = await chrome.storage.local.get(['enabled', 'likedVideos', 'minDuration', 'watchPercent', 'recordHistory']);
+    const enabled = res.enabled !== false;
+    toggleSwitch.checked = enabled;
+    container.classList.toggle('status-disabled', !enabled);
 
-      allLikedVideos = res.likedVideos || [];
-      const count = allLikedVideos.length;
-      statsCount.textContent = `${count} video${count !== 1 ? 's' : ''} auto-liked`;
+    allLikedVideos = res.likedVideos || [];
+    const count = allLikedVideos.length;
+    statsCount.textContent = `${count} video${count !== 1 ? 's' : ''} auto-liked`;
 
-      const minDur = res.minDuration ?? 2;
-      const percent = res.watchPercent ?? 25;
-      minDurationInput.value = minDur;
-      watchPercentInput.value = percent;
-      recordHistoryToggle.checked = res.recordHistory !== false;
-      updateTagline(percent, minDur);
-      renderActivity(allLikedVideos);
-      renderHistory(getFilteredHistory());
-    });
+    const minDur = res.minDuration ?? 2;
+    const percent = res.watchPercent ?? 25;
+    minDurationInput.value = minDur;
+    watchPercentInput.value = percent;
+    recordHistoryToggle.checked = res.recordHistory !== false;
+    updateTagline(percent, minDur);
+    renderActivity(allLikedVideos);
+    renderHistory(getFilteredHistory());
   }
 
   function openDashboard() {
+    if (!isContextValid()) return;
     window.open(chrome.runtime.getURL('popup.html'));
   }
 
@@ -187,28 +193,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  toggleSwitch.addEventListener('change', () => {
+  toggleSwitch.addEventListener('change', async () => {
+    if (!isContextValid()) return;
     const enabled = toggleSwitch.checked;
-    chrome.storage.local.set({ enabled });
+    await chrome.storage.local.set({ enabled });
     container.classList.toggle('status-disabled', !enabled);
   });
 
-  minDurationInput.addEventListener('change', () => {
+  minDurationInput.addEventListener('change', async () => {
+    if (!isContextValid()) return;
     const val = Math.max(0, Math.min(120, parseInt(minDurationInput.value, 10) || 0));
     minDurationInput.value = val;
-    chrome.storage.local.set({ minDuration: val });
+    await chrome.storage.local.set({ minDuration: val });
     updateTagline(parseInt(watchPercentInput.value, 10), val);
   });
 
-  watchPercentInput.addEventListener('change', () => {
+  watchPercentInput.addEventListener('change', async () => {
+    if (!isContextValid()) return;
     const val = Math.max(1, Math.min(100, parseInt(watchPercentInput.value, 10) || 25));
     watchPercentInput.value = val;
-    chrome.storage.local.set({ watchPercent: val });
+    await chrome.storage.local.set({ watchPercent: val });
     updateTagline(val, parseInt(minDurationInput.value, 10));
   });
 
-  recordHistoryToggle.addEventListener('change', () => {
-    chrome.storage.local.set({ recordHistory: recordHistoryToggle.checked });
+  recordHistoryToggle.addEventListener('change', async () => {
+    if (!isContextValid()) return;
+    await chrome.storage.local.set({ recordHistory: recordHistoryToggle.checked });
   });
 
   viewAllBtn.addEventListener('click', () => {
@@ -220,19 +230,28 @@ document.addEventListener('DOMContentLoaded', () => {
     historyPanel.classList.remove('open');
   });
 
-  clearHistoryBtn.addEventListener('click', () => {
-    chrome.storage.local.set({ likedVideos: [] }, () => {
-      allLikedVideos = [];
-      statsCount.textContent = '0 videos auto-liked';
-      renderActivity([]);
-      renderHistory([]);
-      historyPanel.classList.remove('open');
-    });
+  clearHistoryBtn.addEventListener('click', async () => {
+    if (!isContextValid()) return;
+    await chrome.storage.local.set({ likedVideos: [] });
+    allLikedVideos = [];
+    statsCount.textContent = '0 videos auto-liked';
+    renderActivity([]);
+    renderHistory([]);
+    historyPanel.classList.remove('open');
   });
 
   loadState();
-  pollTimer = setInterval(() => {
-    chrome.storage.local.get(['trackingState'], (res) => renderTracking(res.trackingState || null));
+  pollTimer = setInterval(async () => {
+    if (!isContextValid()) {
+      clearInterval(pollTimer);
+      return;
+    }
+    try {
+      const res = await chrome.storage.local.get(['trackingState']);
+      renderTracking(res.trackingState || null);
+    } catch {
+      clearInterval(pollTimer);
+    }
   }, 1000);
 
   window.addEventListener('unload', () => {
