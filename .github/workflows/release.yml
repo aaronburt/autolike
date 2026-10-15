@@ -36,7 +36,7 @@ jobs:
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_OUTPUT
 
       - name: Upload zip to GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
         with:
           files: ${{ steps.package.outputs.ZIP_NAME }}
