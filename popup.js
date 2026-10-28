@@ -1,3 +1,6 @@
+// Firefox exposes promise-based APIs on `browser`; Chrome only has `chrome`.
+const ext = typeof browser !== 'undefined' ? browser : chrome;
+
 document.addEventListener('DOMContentLoaded', () => {
   const toggleSwitch = document.getElementById('toggle-switch');
   const statsCount = document.getElementById('stats-count');
@@ -31,7 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let searchQuery = '';
 
   function isContextValid() {
-    return Boolean(typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id);
+    try {
+      return Boolean(ext && ext.runtime && ext.runtime.id);
+    } catch {
+      return false;
+    }
   }
 
   function timeAgo(timestamp) {
@@ -103,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function deleteHistoryItem(videoId, timestamp) {
     if (!isContextValid()) return;
     allLikedVideos = allLikedVideos.filter((v) => !(v.videoId === videoId && v.timestamp === timestamp));
-    await chrome.storage.local.set({ likedVideos: allLikedVideos });
+    await ext.storage.local.set({ likedVideos: allLikedVideos });
     const count = allLikedVideos.length;
     statsCount.textContent = `${count} video${count !== 1 ? 's' : ''} auto-liked`;
     renderActivity(allLikedVideos);
@@ -154,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadState() {
     if (!isContextValid()) return;
-    const res = await chrome.storage.local.get(['enabled', 'likedVideos', 'minDuration', 'watchPercent', 'recordHistory']);
+    const res = await ext.storage.local.get(['enabled', 'likedVideos', 'minDuration', 'watchPercent', 'recordHistory']);
     const enabled = res.enabled !== false;
     toggleSwitch.checked = enabled;
     container.classList.toggle('status-disabled', !enabled);
@@ -174,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openDashboard() {
     if (!isContextValid()) return;
-    window.open(chrome.runtime.getURL('popup.html'));
+    ext.tabs.create({ url: ext.runtime.getURL('popup.html') });
   }
 
   if (openTabBtn) openTabBtn.addEventListener('click', openDashboard);
@@ -190,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
   toggleSwitch.addEventListener('change', async () => {
     if (!isContextValid()) return;
     const enabled = toggleSwitch.checked;
-    await chrome.storage.local.set({ enabled });
+    await ext.storage.local.set({ enabled });
     container.classList.toggle('status-disabled', !enabled);
   });
 
@@ -198,19 +205,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isContextValid()) return;
     const val = Math.max(0, Math.min(120, parseInt(minDurationInput.value, 10) || 0));
     minDurationInput.value = val;
-    await chrome.storage.local.set({ minDuration: val });
+    await ext.storage.local.set({ minDuration: val });
   });
 
   watchPercentInput.addEventListener('change', async () => {
     if (!isContextValid()) return;
     const val = Math.max(1, Math.min(100, parseInt(watchPercentInput.value, 10) || 25));
     watchPercentInput.value = val;
-    await chrome.storage.local.set({ watchPercent: val });
+    await ext.storage.local.set({ watchPercent: val });
   });
 
   recordHistoryToggle.addEventListener('change', async () => {
     if (!isContextValid()) return;
-    await chrome.storage.local.set({ recordHistory: recordHistoryToggle.checked });
+    await ext.storage.local.set({ recordHistory: recordHistoryToggle.checked });
   });
 
   viewAllBtn.addEventListener('click', () => {
@@ -224,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   clearHistoryBtn.addEventListener('click', async () => {
     if (!isContextValid()) return;
-    await chrome.storage.local.set({ likedVideos: [] });
+    await ext.storage.local.set({ likedVideos: [] });
     allLikedVideos = [];
     statsCount.textContent = '0 videos auto-liked';
     renderActivity([]);
@@ -239,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      const res = await chrome.storage.local.get(['trackingState']);
+      const res = await ext.storage.local.get(['trackingState']);
       renderTracking(res.trackingState || null);
     } catch {
       clearInterval(pollTimer);
