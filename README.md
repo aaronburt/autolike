@@ -1,6 +1,6 @@
 # AutoLike
 
-AutoLike is a Chrome extension that automatically likes YouTube videos based on customizable watch duration and threshold settings.
+AutoLike is a Chrome and Firefox extension that automatically likes YouTube videos based on customizable watch duration and threshold settings.
 
 ## How It Works
 Once enabled, the extension monitors your active watch progress on YouTube. If a video meets the minimum configured length (default: 2 minutes), AutoLike automatically clicks the Like button after you have actively watched the configured percentage (default: 25%) of its total runtime.
@@ -25,7 +25,7 @@ AutoLike respects user choices:
 ## Installation
 
 ### From Release
-1. Download the latest `autolike-extension-v*.zip` from the [GitHub Releases](https://github.com/aaronburt/AutoLike/releases/latest) page.
+1. Download the latest `autolike-chrome-v*.zip` from the [GitHub Releases](https://github.com/aaronburt/AutoLike/releases/latest) page.
 2. Unzip the downloaded archive.
 3. Open Google Chrome and navigate to `chrome://extensions/`.
 4. Enable **Developer mode** using the toggle in the top right corner.
@@ -36,6 +36,20 @@ AutoLike respects user choices:
 2. Open Google Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer mode** using the toggle in the top right corner.
 4. Click **Load unpacked** and select this project's folder (`AutoLike`).
+
+## Firefox
+
+Chrome and Firefox share one codebase. `manifest.json` is the Chrome manifest, and `manifest.firefox.json` holds the Firefox-only additions (gecko add-on ID, minimum version, host permissions). `scripts/build.mjs` merges them.
+
+```
+node scripts/build.mjs firefox   # or: chrome | all
+```
+
+This writes unpacked builds to `dist/chrome/` and `dist/firefox/` plus zips in `dist/`. Requires Firefox 128 or newer.
+
+### Install in Firefox
+- **Temporary (development):** open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `dist/firefox/manifest.json`.
+- **Release zip:** the `autolike-firefox-v*.zip` release asset is unsigned. Regular Firefox only installs signed add-ons, so it must be signed through [addons.mozilla.org](https://addons.mozilla.org/developers/) (unlisted is fine) or loaded temporarily as above.
 
 ## Notice
 This project was built with the assistance of Google Gemini and thoroughly reviewed and verified by a human.

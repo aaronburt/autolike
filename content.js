@@ -1,4 +1,7 @@
 (() => {
+  // Firefox exposes promise-based APIs on `browser`; Chrome only has `chrome`.
+  const ext = typeof browser !== 'undefined' ? browser : chrome;
+
   const POLL_INTERVAL_MS = 1000;
   const MAX_HISTORY = 50;
   const SECONDS_PER_MINUTE = 60;
@@ -13,7 +16,11 @@
   let lastCurrentTime = null;
 
   function isContextValid() {
-    return Boolean(typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id);
+    try {
+      return Boolean(ext && ext.runtime && ext.runtime.id);
+    } catch {
+      return false;
+    }
   }
 
   async function setTracking(data) {
@@ -22,7 +29,7 @@
       return;
     }
     try {
-      await chrome.storage.local.set({ trackingState: data });
+      await ext.storage.local.set({ trackingState: data });
     } catch {
       stop();
     }
@@ -73,12 +80,12 @@
   async function recordLikedVideo(videoId, title) {
     if (!isContextValid()) return;
     try {
-      const result = await chrome.storage.local.get(['likedVideos', 'recordHistory']);
+      const result = await ext.storage.local.get(['likedVideos', 'recordHistory']);
       if (result.recordHistory === false) return;
       const list = result.likedVideos || [];
       list.unshift({ videoId, title, timestamp: Date.now() });
       if (list.length > MAX_HISTORY) list.length = MAX_HISTORY;
-      await chrome.storage.local.set({ likedVideos: list });
+      await ext.storage.local.set({ likedVideos: list });
     } catch {
       stop();
     }
@@ -156,7 +163,7 @@
 
     let settings;
     try {
-      settings = await chrome.storage.local.get(['enabled', 'minDuration', 'watchPercent']);
+      settings = await ext.storage.local.get(['enabled', 'minDuration', 'watchPercent']);
     } catch {
       stop();
       return;
@@ -196,7 +203,7 @@
     lastCurrentTime = null;
     if (isContextValid()) {
       try {
-        chrome.storage.local.remove('trackingState');
+        ext.storage.local.remove('trackingState');
       } catch {
         // Silently handled
       }
